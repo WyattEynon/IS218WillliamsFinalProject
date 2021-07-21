@@ -3,25 +3,36 @@
 <table class="table">
     <thead>
     <tr>
-        <th scope="col">City Name</th>
-        <th scope="col">Latitude</th>
-        <th scope="col">Longitude</th>
-        <th scope="col">Country</th>
-        <th scope="col">Abbreviation</th>
-        <th scope="col">Capital Status</th>
-        <th scope="col">Population</th>
+        <th scope="col">Month</th>
+        <th scope="col">Avg</th>
+        <th scope="col">2005</th>
+        <th scope="col">2006</th>
+        <th scope="col">2007</th>
+        <th scope="col">2008</th>
+        <th scope="col">2009</th>
+        <th scope="col">2010</th>
+        <th scope="col">2011</th>
+        <th scope="col">2012</th>
+        <th scope="col">2013</th>
+        <th scope="col">2014</th>
+        <th scope="col">2015</th>
     </tr>
     </thead>
     <tbody>
-    {% for city in cities %}
+    {% for month in hurricanes %}
     <tr>
-        <td><a href="view/{{city.id}}">{{ city.fldName }}</a></td>
-        <td>{{ city.fldLat }}</td>
-        <td>{{ city.fldLong }}</td>
-        <td>{{ city.fldCountry }}</td>
-        <td>{{ city.fldAbbreviation }}</td>
-        <td>{{ city.fldCapitalStatus }}</td>
-        <td>{{ city.fldPopulation }}</td>
+        <td><a href="view/{{month.id}}">{{month.fldMonth }}</a></td>
+        <td>{{ month.fldAvg }}</td>
+        <td>{{ month.fld2005 }}</td>
+        <td>{{ month.fld2006 }}</td>
+        <td>{{ month.fld2007 }}</td>
+        <td>{{ month.fld2008 }}</td>
+        <td>{{ month.fld2010 }}</td>
+        <td>{{ month.fld2011 }}</td>
+        <td>{{ month.fld2012 }}</td>
+        <td>{{ month.fld2013 }}</td>
+        <td>{{ month.fld2014 }}</td>
+        <td>{{ month.fld2015 }}</td>
     </tr>
     {% endfor %}
     </tbody>
