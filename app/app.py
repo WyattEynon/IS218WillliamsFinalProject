@@ -15,7 +15,7 @@ app.config['MYSQL_DATABASE_PORT'] = 3306
 app.config['MYSQL_DATABASE_DB'] = 'citiesData'
 mysql.init_app(app)
 
-
+#Part 1 of 11 \/\/\/
 @app.route('/', methods=['GET'])
 def index():
     user = {'username': 'Hurricanes Project'}
