@@ -1,3 +1,5 @@
 Flask
 flask-mysql
 simplejson
+email_validator
+flask_wtf
