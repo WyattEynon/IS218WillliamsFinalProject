@@ -11,3 +11,4 @@ def home():
         title="Jinja Demo Site",
         description="Smarter page templates with Flask & Jinja."
     )
+
