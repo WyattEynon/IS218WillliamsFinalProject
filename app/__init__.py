@@ -78,6 +78,11 @@ def form_insert_post():
     mysql.get_db().commit()
     return redirect("/", code=302)
 
+@app.route("/hurricanes/contact", methods=["GET", "POST"])
+def contact():
+    """Standard `contact` form."""
+    form = ContactForm()
+
 @app.route('/delete/<int:month_id>', methods=['POST'])
 def form_delete_post(month_id):
     cursor = mysql.get_db().cursor()
