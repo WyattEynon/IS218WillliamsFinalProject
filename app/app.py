@@ -81,7 +81,7 @@ def form_insert_post():
 @app.route("/hurricanes/contact", methods=["GET", "POST"])
 def contact():
     """Standard `contact` form."""
-    form = ContactForm()
+    #form = ContactForm()
 
 @app.route('/delete/<int:month_id>', methods=['POST'])
 def form_delete_post(month_id):
