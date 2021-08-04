@@ -1,2 +1,4 @@
 # Project Description
-This is my Final Project for IS218, the master branch (should) show the final state of my web app according to the tutorials. As instructed I have placed each "step" in the process into its respective branch.
+# Project Description
+This is chapter 3 of the Final Project. Here is a screenshot of my wtfourm along with a successful console response code.
+![main](screenshots/Final_Stuff/chap3ContactFourm)
