@@ -9,4 +9,4 @@ RUN pip install  -r requirements.txt --upgrade pip
 
 COPY . /app
 
-CMD python /app/app.py
+CMD python app1.py
