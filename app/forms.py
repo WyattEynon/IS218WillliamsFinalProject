@@ -1,7 +1,7 @@
 """Form object declaration."""
-from flask_wtf import FlaskForm
+from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import StringField, TextField, SubmitField
-from wtforms.validators import DataRequired, Length
+from wtforms.validators import DataRequired, Length, Email
 
 
 class ContactForm(FlaskForm):
@@ -13,7 +13,7 @@ class ContactForm(FlaskForm):
     email = StringField(
         'Email',
         [
-            Email(message=('Not a valid email address.')),
+            Email(message='Not a valid email address.'),
             DataRequired()
         ]
     )
@@ -25,5 +25,5 @@ class ContactForm(FlaskForm):
             message=('Your message is too short.'))
         ]
     )
-    recaptcha = RecaptchaField()
+    #recaptcha = RecaptchaField()
     submit = SubmitField('Submit')

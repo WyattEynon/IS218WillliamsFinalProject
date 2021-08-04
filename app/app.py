@@ -4,6 +4,7 @@ from flask import Flask, request, Response, redirect
 from flask import render_template
 from flaskext.mysql import MySQL
 from pymysql.cursors import DictCursor
+from forms import ContactForm
 
 app = Flask(__name__)
 mysql = MySQL(cursorclass=DictCursor)
@@ -13,17 +14,34 @@ app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
 app.config['MYSQL_DATABASE_PORT'] = 3306
 app.config['MYSQL_DATABASE_DB'] = 'citiesData'
+app.config['SECRET_KEY'] = '99c35995d8d00c5f23f61f6c7080a1c5'
 mysql.init_app(app)
 
-#Part 1 of 11 \/\/\/
+
 @app.route('/', methods=['GET'])
 def index():
-    user = {'username': 'Hurricanes Project'}
+    user = {'username': 'Cities Project'}
     cursor = mysql.get_db().cursor()
     cursor.execute('SELECT * FROM tblCitiesImport')
     result = cursor.fetchall()
     return render_template('index.html', title='Home', user=user, hurricanes=result)
 
+
+#Forms Stuff
+@app.route("/contact", methods=["GET", "POST"])
+def contact():
+    """Standard `contact` form."""
+    form = ContactForm()
+    if form.validate_on_submit():
+        return redirect(url_for("success"))
+    return render_template(
+        "contact.html",
+        form=form,
+        template="form-template"
+    )
+
+
+#Project 3 stuff/apis continuied
 
 @app.route('/view/<int:month_id>', methods=['GET'])
 def record_view(month_id):
@@ -53,7 +71,7 @@ def form_update_post(month_id):
                  request.form.get('fld2015'),
                  month_id)
     sql_update_query = """UPDATE tblCitiesImport t SET t.fldMonth = %s, t.fldAvg = %s, t.fld2005 = %s, t.fld2006 = %s, t.fld2007 = 
-    %s, t.fld2008 = %s, t.fld2009 = %s, t.fld2010 = %s , t.fld2011 = %s, t.fld2012 = %s, t.fld2013 = %s, t.fld2014 = %s, t.fld2015 = %s, WHERE t.id = %s """
+    %s, t.fld2008 = %s, t.fld2009 = %s, t.fld2010 = %s , t.fld2011 = %s, t.fld2012 = %s, t.fld2013 = %s, t.fld2014 = %s, t.fld2015 = %s WHERE t.id = %s """
     cursor.execute(sql_update_query, inputData)
     mysql.get_db().commit()
     return redirect("/", code=302)
@@ -67,7 +85,7 @@ def form_insert_get():
 def form_insert_post():
     cursor = mysql.get_db().cursor()
     inputData = (request.form.get('fldMonth'), request.form.get('fldAvg'), request.form.get('2005'),
-                 request.form.get("fld2006"), request.form.get('fld2007'),
+                 request.form.get('fld2006'), request.form.get('fld2007'),
                  request.form.get('fld2008'), request.form.get('fld2009'),
                  request.form.get('fld2010'), request.form.get('fld2011'),
                  request.form.get('fld2012'), request.form.get('fld2013'),
@@ -77,11 +95,6 @@ def form_insert_post():
     cursor.execute(sql_insert_query, inputData)
     mysql.get_db().commit()
     return redirect("/", code=302)
-
-@app.route("/hurricanes/contact", methods=["GET", "POST"])
-def contact():
-    """Standard `contact` form."""
-    #form = ContactForm()
 
 @app.route('/delete/<int:month_id>', methods=['POST'])
 def form_delete_post(month_id):
@@ -114,19 +127,52 @@ def api_retrieve(month_id) -> str:
 
 @app.route('/api/v1/hurricanes/', methods=['POST'])
 def api_add() -> str:
-    resp = Response(status=201, mimetype='application/json')
-    return resp
+    try:
+        content = request.json
+        cursor = mysql.get_db().cursor()
+        inputData = (content['fldMonth'], content['fldAvg'], content['fld2005'],
+                     content['fld2006'], content['fld2007'],
+                     content['fld2008'], content['fld2009'],
+                     content['fld2010'], content['fld2011'],
+                     content['fld2012'], content['fld2013'],
+                     content['fld2014'], content['fld2015']
+                     )
+        sql_insert_query = """INSERT INTO tblCitiesImport (fldName,fldLat,fldLong,fldCountry,fldAbbreviation,fldCapitalStatus,fldPopulation) VALUES (%s, %s,%s, %s,%s, %s,%s) """
+        cursor.execute(sql_insert_query, inputData)
+        mysql.get_db().commit()
+        resp = Response(status=201, mimetype='application/json')
+        return resp
+    except:
+        resp = Response(status=201, mimetype='application/json')
+        return resp
 
 
 @app.route('/api/v1/hurricanes/<int:month_id>', methods=['PUT'])
 def api_edit(month_id) -> str:
-    resp = Response(status=201, mimetype='application/json')
+    cursor = mysql.get_db().cursor()
+    content = request.json
+    inputData = (content['fldMonth'], content['fldAvg'], content['fld2005'],
+                 content['fld2006'], content['fld2007'],
+                 content['fld2008'], content['fld2009'],
+                 content['fld2010'], content['fld2011'],
+                 content['fld2012'], content['fld2013'],
+                 content['fld2014'], content['fld2015'],month_id
+                 )
+    sql_update_query = """UPDATE tblCitiesImport t SET t.fldMonth = %s, t.fldAvg = %s, t.fld2005 = %s, t.fld2006 = 
+            %s, t.fld2007 = %s, t.fld2008 = %s, t.fld2009 = %s, t.fld2010 = %s, t.fld2011 = %s, t.fld2012 = %s, t.fld2013 = %s, t.fld2014 = %s, t.fld2015 = %s WHERE t.id = %s """
+    cursor.execute(sql_update_query, inputData)
+    mysql.get_db().commit()
+    resp = Response(status=200, mimetype='application/json')
     return resp
 
 
 @app.route('/api/hurricanes/<int:month_id>', methods=['DELETE'])
 def api_delete(month_id) -> str:
-    resp = Response(status=210, mimetype='application/json')
+    cursor = mysql.get_db().cursor()
+    sql_delete_query = """DELETE FROM tblCitiesImport WHERE id = %s """
+    cursor.execute(sql_delete_query, month_id)
+    mysql.get_db().commit()
+    resp = Response(status=200, mimetype='application/json')
     return resp
 
 
